@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#04020d">
+<title>VOLTA — Harness the storm</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Unbounded:wght@500;800&display=swap" rel="stylesheet">
+<noscript><style>.rv{opacity:1!important}</style></noscript>
+<style>
+:root{--c:#00f0ff;--m:#ff2bd6;--v:#7a5cff;--tx:#eaf2ff;--mut:#a3aed0}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{background:radial-gradient(1100px 700px at 85% -10%,#1d0b55,transparent),radial-gradient(900px 600px at 0 100%,#32094f,transparent),#04020d;background-attachment:fixed;color:var(--tx);font:400 1.05rem/1.6 'Space Grotesk',system-ui,sans-serif;overflow-x:hidden}
+::selection{background:var(--m);color:#fff}
+canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+#gl{z-index:0}#fx{z-index:1}
+main,footer{position:relative;z-index:2}
+.glass{position:relative;border-radius:28px;background:linear-gradient(135deg,rgba(255,255,255,.14),rgba(255,255,255,.03) 55%,rgba(255,255,255,.09));-webkit-backdrop-filter:blur(22px) saturate(190%);backdrop-filter:blur(22px) saturate(190%);border:1px solid rgba(255,255,255,.17);box-shadow:inset 0 1px 1px rgba(255,255,255,.6),inset 0 -10px 28px rgba(0,240,255,.07),inset 0 0 44px rgba(122,92,255,.12),0 24px 70px rgba(0,0,0,.5);overflow:hidden;transition:transform .18s ease-out,box-shadow .35s}
+.glass:before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s;background:radial-gradient(360px circle at var(--mx,50%) var(--my,0),rgba(255,255,255,.24),rgba(0,240,255,.07) 42%,transparent 62%)}
+.glass:hover:before{opacity:1}
+.glass:hover{box-shadow:inset 0 1px 1px rgba(255,255,255,.7),inset 0 0 44px rgba(122,92,255,.18),0 24px 70px rgba(0,0,0,.5),0 0 60px rgba(0,240,255,.18)}
+.nav{position:fixed;z-index:10;top:16px;left:50%;transform:translateX(-50%);width:min(1100px,calc(100% - 24px));display:flex;align-items:center;justify-content:space-between;padding:10px 10px 10px 28px;border-radius:999px}
+.logo{font:800 1.1rem Unbounded,sans-serif;letter-spacing:.18em;text-shadow:0 0 20px var(--c)}
+.links{display:flex;gap:30px}.links a{color:var(--mut);text-decoration:none;font-weight:500;transition:.2s}
+.links a:hover{color:#fff;text-shadow:0 0 14px var(--c)}
+.btn{font:700 .95rem 'Space Grotesk',sans-serif;color:#04020d;border:0;cursor:pointer;padding:14px 28px;border-radius:999px;text-decoration:none;display:inline-block;background:linear-gradient(120deg,var(--c),var(--v) 55%,var(--m));box-shadow:inset 0 0 0 1px rgba(255,255,255,.35),0 8px 30px rgba(0,240,255,.35),0 0 50px rgba(255,43,214,.25);transition:transform .2s,box-shadow .3s}
+.btn:hover{transform:translateY(-3px) scale(1.04);box-shadow:inset 0 0 0 1px rgba(255,255,255,.5),0 10px 40px rgba(0,240,255,.6),0 0 80px rgba(255,43,214,.45)}
+.btn:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.btn.sm{padding:10px 22px;font-size:.9rem}
+.btn.g{color:#fff;background:rgba(255,255,255,.08);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 0 0 1px rgba(255,255,255,.18)}
+.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:120px 6vw 60px;max-width:1200px;margin:auto}
+.tag{display:inline-flex;gap:10px;align-items:center;padding:8px 18px;border-radius:999px;font-size:.9rem;color:var(--c)}
+.tag i{width:8px;height:8px;border-radius:50%;background:var(--c);box-shadow:0 0 12px var(--c);animation:pu 1.4s infinite}
+h1{font:800 clamp(2.5rem,5.6vw,5rem)/1.04 Unbounded,sans-serif;letter-spacing:-.03em;margin:26px 0 20px;max-width:8.6em;background:linear-gradient(95deg,#fff 0%,var(--c) 30%,var(--v) 60%,var(--m) 85%,#fff 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:fl 8s ease-in-out infinite alternate;filter:drop-shadow(0 0 26px rgba(122,92,255,.5))}
+.hero p{color:var(--mut);max-width:30em;font-size:1.15rem}
+.row{display:flex;gap:14px;flex-wrap:wrap;margin-top:34px}
+.blob{position:absolute;width:132px;height:132px;display:grid;place-content:center;text-align:center;border-radius:42% 58% 60% 40%/50% 40% 60% 50%;animation:mo 9s ease-in-out infinite,fy 7s ease-in-out infinite}
+.blob b{font:800 1.2rem Unbounded,sans-serif}.blob small{color:var(--mut);font-size:.8rem}
+.b1{right:19%;top:22%}.b2{right:3%;bottom:16%;animation-delay:-3s}
+section{max-width:1200px;margin:auto;padding:110px 6vw}
+h2{font:800 clamp(1.8rem,4vw,3rem)/1.12 Unbounded,sans-serif;letter-spacing:-.02em;margin-bottom:14px;max-width:14em}
+.sub{color:var(--mut);max-width:32em;margin-bottom:48px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px}
+.card{padding:36px 30px}
+.card svg{width:46px;height:46px;margin-bottom:22px;stroke:var(--k);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 9px var(--k))}
+.card h3{font:700 1.3rem 'Space Grotesk',sans-serif;margin-bottom:8px}
+.card p{color:var(--mut);font-size:1rem}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:26px;padding:48px 34px;text-align:center}
+.stats b{display:block;font:800 clamp(2rem,4.4vw,3.3rem) Unbounded,sans-serif;background:linear-gradient(120deg,var(--c),var(--m));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 16px rgba(0,240,255,.35))}
+.stats span{color:var(--mut);font-size:.95rem}
+.cta{padding:64px 28px;text-align:center}.cta h2{margin:0 auto 14px}.cta .sub{margin:0 auto 30px}
+form{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+input{font:inherit;color:#fff;padding:14px 24px;width:min(340px,100%);border-radius:999px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.07);outline:0;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);transition:.25s}
+input::placeholder{color:#7f8bb0}
+input:focus{border-color:var(--c);box-shadow:0 0 0 4px rgba(0,240,255,.15),0 0 34px rgba(0,240,255,.35)}
+#ok{display:block;margin-top:18px;color:var(--c);min-height:1.5em}
+footer{text-align:center;color:var(--mut);padding:30px 20px 60px;font-size:.92rem}
+.rv{opacity:0}.rv.in{opacity:1;animation:up 1s cubic-bezier(.2,.8,.2,1) both;animation-delay:var(--d,0s)}
+@keyframes up{from{opacity:0;scale:.96}to{opacity:1;scale:1}}
+@keyframes fl{to{background-position:100% 0}}
+@keyframes pu{50%{opacity:.3}}
+@keyframes mo{50%{border-radius:60% 40% 38% 62%/42% 60% 40% 58%}}
+@keyframes fy{50%{translate:0 -22px}}
+@media(max-width:900px){.links,.blob{display:none}.hero{justify-content:flex-end;padding-bottom:70px}h1{max-width:100%}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1}}
+</style></head>
+<body>
+<canvas id="gl"></canvas><canvas id="fx"></canvas>
+<nav class="glass nav"><span class="logo">VOLTA</span><div class="links"><a href="#features">Features</a><a href="#tech">Performance</a><a href="#cta">Access</a></div><a class="btn sm" href="#cta">Get access</a></nav>
+<main>
+<header class="hero">
+ <div class="glass tag rv"><i></i>Private beta is open</div>
+ <h1 class="rv" style="--d:.1s">Harness the storm.</h1>
+ <p class="rv" style="--d:.25s">Volta turns raw plasma into reliable, real-time power. AI-orchestrated, shielded by design, and built to scale across entire cities.</p>
+ <div class="row rv" style="--d:.4s"><a class="btn" href="#cta">Get early access</a><button class="btn g" data-ig>Ignite the core ↯</button></div>
+ <div class="glass blob b1"><b>0.3ms</b><small>response</small></div>
+ <div class="glass blob b2"><b>99.98%</b><small>uptime</small></div>
+</header>
+<section id="features">
+ <h2 class="rv">Engineered for the impossible</h2>
+ <p class="sub rv">Three breakthroughs, one seamless platform.</p>
+ <div class="grid">
+  <article class="glass tilt card rv" style="--k:#00f0ff;--d:.05s"><svg viewBox="0 0 48 48"><path d="M27 4 10 27h12l-3 17 19-25H26z"/></svg><h3>Plasma core engine</h3><p>Contain and channel fusion-grade energy with self-stabilizing magnetic lattices that adapt in microseconds.</p></article>
+  <article class="glass tilt card rv" style="--k:#ff2bd6;--d:.15s"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="4"/><ellipse cx="24" cy="24" rx="20" ry="8"/><ellipse cx="24" cy="24" rx="20" ry="8" transform="rotate(60 24 24)"/><ellipse cx="24" cy="24" rx="20" ry="8" transform="rotate(120 24 24)"/></svg><h3>Arc-speed network</h3><p>A mesh of neural routers moves power and data together, rerouting around failures before they happen.</p></article>
+  <article class="glass tilt card rv" style="--k:#8f7bff;--d:.25s"><svg viewBox="0 0 48 48"><path d="M24 4 7 11v12c0 11 7 18 17 21 10-3 17-10 17-21V11z"/><path d="m16 24 6 6 11-12"/></svg><h3>Quantum shielding</h3><p>Post-quantum encryption and adaptive field shielding protect every node and every watt, end to end.</p></article>
+ </div>
+</section>
+<section id="tech">
+ <h2 class="rv">Built to carry a city</h2>
+ <p class="sub rv">Live figures from the Volta pilot grid.</p>
+ <div class="glass tilt stats rv">
+  <div><b data-n="99.98" data-d="2" data-s="%">0</b><span>Grid uptime</span></div>
+  <div><b data-n="0.3" data-d="1" data-s="ms">0</b><span>Response time</span></div>
+  <div><b data-n="2.4" data-d="1" data-s=" GW">0</b><span>Capacity under management</span></div>
+ </div>
+</section>
+<section id="cta">
+ <div class="glass cta rv">
+  <h2>Power up with Volta</h2>
+  <p class="sub">Join the private beta and get a pilot grid configured for your team.</p>
+  <form><input type="email" placeholder="you@company.com" aria-label="Email address" required><button class="btn">Request access</button></form>
+  <span id="ok" role="status"></span>
+ </div>
+</section>
+</main>
+<footer>© 2026 Volta Labs. Click anywhere to surge the core.</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(()=>{
+window.fire=()=>{};
+const q=s=>document.querySelector(s);
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const el=e.target;el.classList.add('in');io.unobserve(el);
+ el.querySelectorAll('[data-n]').forEach(c=>{const n=+c.dataset.n,d=+(c.dataset.d||0),t0=performance.now();
+  (function f(now){const k=Math.min(1,(now-t0)/1800);c.textContent=(n*(1-Math.pow(1-k,3))).toFixed(d)+(c.dataset.s||'');if(k<1)requestAnimationFrame(f)})(t0)})}),{threshold:.15});
+document.querySelectorAll('.rv').forEach(e=>io.observe(e));
+document.querySelectorAll('.glass').forEach(el=>{
+ el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+  el.style.setProperty('--mx',x*100+'%');el.style.setProperty('--my',y*100+'%');
+  if(el.classList.contains('tilt'))el.style.transform=`perspective(900px) rotateY(${(x-.5)*14}deg) rotateX(${(.5-y)*14}deg) translateZ(10px)`});
+ el.addEventListener('pointerleave',()=>{if(el.classList.contains('tilt'))el.style.transform=''})});
+document.querySelectorAll('[data-ig]').forEach(b=>b.addEventListener('click',()=>fire()));
+q('form').addEventListener('submit',e=>{e.preventDefault();q('#ok').textContent="You're on the list. Watch the storm.";fire()});
+})();
+</script>
+<script>
+(()=>{
+const rnd=(a,b)=>a+Math.random()*(b-a),V=THREE.Vector3,RAD=1.6,cols=['0,240,255','255,43,214','150,120,255'];
+let W,H,surge=0,mx=0,my=0,mact=0,sy=0,tg=null,last=0;
+const fx=document.getElementById('fx'),g=fx.getContext('2d');
+const ren=new THREE.WebGLRenderer({canvas:document.getElementById('gl'),antialias:true,alpha:true}),scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(40,1,.1,100),grp=new THREE.Group();
+cam.position.z=9;scene.add(grp);
+const core=new THREE.Mesh(new THREE.SphereGeometry(RAD,96,96),new THREE.ShaderMaterial({uniforms:{t:{value:0},s:{value:0}},
+vertexShader:`varying vec3 vN,vP,vV;
+void main(){vN=normalize(normalMatrix*normal);vP=position;vec4 m=modelViewMatrix*vec4(position,1.);vV=normalize(-m.xyz);gl_Position=projectionMatrix*m;}`,
+fragmentShader:`uniform float t,s;varying vec3 vN,vP,vV;
+float h(vec3 p){p=fract(p*.3183099+.1);p*=17.;return fract(p.x*p.y*p.z*(p.x+p.y+p.z));}
+float n(vec3 x){vec3 i=floor(x),f=fract(x);f=f*f*(3.-2.*f);
+return mix(mix(mix(h(i),h(i+vec3(1.,0.,0.)),f.x),mix(h(i+vec3(0.,1.,0.)),h(i+vec3(1.,1.,0.)),f.x),f.y),
+mix(mix(h(i+vec3(0.,0.,1.)),h(i+vec3(1.,0.,1.)),f.x),mix(h(i+vec3(0.,1.,1.)),h(i+vec3(1.,1.,1.)),f.x),f.y),f.z);}
+void main(){
+vec3 p=vP*1.4;
+float f=n(p*2.+t*.5)*.55+n(p*4.-t*.7)*.3+n(p*9.+vec3(0.,t*1.2,0.))*.15;
+float v=pow(1.-abs(n(p*3.+vec3(t*.3,0.,t*.2))*2.-1.),7.);
+float w=pow(1.-abs(n(p*5.-t*.4)*2.-1.),9.);
+float fr=pow(1.-max(dot(normalize(vN),normalize(vV)),0.),2.5);
+vec3 c=mix(vec3(.03,.01,.16),vec3(.38,.12,1.),smoothstep(.25,.8,f));
+c=mix(c,vec3(1.,.1,.8),smoothstep(.65,1.,f)*.6);
+c+=vec3(0.,.95,1.)*v*(1.2+s*2.)+vec3(1.,.3,.9)*w*(.8+s*2.);
+c+=mix(vec3(0.,.9,1.),vec3(1.,.15,.85),.5+.5*sin(t*.8))*fr*1.6;
+gl_FragColor=vec4(c*(1.+s*.5),1.);}`}));
+const add=(o)=>Object.assign({transparent:true,blending:THREE.AdditiveBlending,depthWrite:false},o);
+const wire=new THREE.Mesh(new THREE.IcosahedronGeometry(RAD*1.22,2),new THREE.MeshBasicMaterial(add({color:0x00f0ff,wireframe:true,opacity:.2})));
+const rings=[0x00f0ff,0xff2bd6].map((c,i)=>{const m=new THREE.Mesh(new THREE.TorusGeometry(RAD*(1.7+i*.35),.012,8,220),new THREE.MeshBasicMaterial(add({color:c,opacity:.8})));m.rotation.set(1.2+i*.5,i*.9,0);grp.add(m);return m});
+grp.add(core,wire);
+const N=900,pa=new Float32Array(N*3);
+for(let i=0;i<N*3;i+=3){const r=rnd(5,16),a=rnd(0,6.283),b=Math.acos(rnd(-1,1));pa[i]=r*Math.sin(b)*Math.cos(a);pa[i+1]=r*Math.cos(b);pa[i+2]=r*Math.sin(b)*Math.sin(a)-4}
+const sg=new THREE.BufferGeometry();sg.setAttribute('position',new THREE.BufferAttribute(pa,3));
+const stars=new THREE.Points(sg,new THREE.PointsMaterial(add({color:0x9fb4ff,size:.05,opacity:.7})));scene.add(stars);
+
+function rs(){W=innerWidth;H=innerHeight;const d=Math.min(devicePixelRatio,2);ren.setPixelRatio(d);ren.setSize(W,H,false);fx.width=W*d;fx.height=H*d;g.setTransform(d,0,0,d,0,0);cam.aspect=W/H;cam.updateProjectionMatrix()}
+addEventListener('resize',rs);rs();
+addEventListener('pointermove',e=>{mx=e.clientX/W*2-1;my=-(e.clientY/H*2-1);mact=1});
+addEventListener('scroll',()=>{sy=scrollY/Math.max(1,document.body.scrollHeight-H)});
+addEventListener('pointerdown',()=>{surge=Math.max(surge,.75)});
+window.fire=()=>{surge=1};
+
+function jag(a,b,o,d){if(!d)return[a,b];const m=a.clone().add(b).multiplyScalar(.5).add(new V(rnd(-o,o),rnd(-o,o),rnd(-o,o)));return jag(a,m,o/2,d-1).slice(0,-1).concat(jag(m,b,o/2,d-1))}
+function mk(){
+ let dir=new V(rnd(-1,1),rnd(-1,1),rnd(-.6,.9)).normalize(),end;
+ if(tg&&mact>0&&Math.random()<.5){dir=tg.clone().normalize();end=tg.clone()}
+ else end=dir.clone().add(new V(rnd(-.5,.5),rnd(-.5,.5),rnd(-.3,.3))).normalize().multiplyScalar(RAD*rnd(1.9,3.6));
+ const a=dir.clone().multiplyScalar(RAD*.97),p=jag(a,end,a.distanceTo(end)*.28,5),br=[];
+ p.forEach((v,i)=>{if(i>3&&i<p.length-3&&Math.random()<.12)br.push(jag(v,v.clone().add(new V(rnd(-1,1),rnd(-1,1),rnd(-.5,.5)).multiplyScalar(RAD*rnd(.4,1))),.25,3))});
+ return{p,br,c:cols[Math.random()*3|0]}}
+function path(P){g.beginPath();P.forEach((v,i)=>{const s=v.clone().applyMatrix4(grp.matrixWorld).project(cam),x=(s.x+1)/2*W,y=(1-s.y)/2*H;i?g.lineTo(x,y):g.moveTo(x,y)})}
+function bolt(b,a){const S=[b.p,...b.br];
+ [[16,.06,b.c],[7,.15,b.c],[3,.45,b.c],[1.3,1,'255,255,255']].forEach(([w,al,c])=>{g.strokeStyle=`rgba(${c},${al*a})`;S.forEach((P,j)=>{g.lineWidth=w*(j?.55:1);path(P);g.stroke()})})}
+const rc=new V();
+function aim(){rc.set(mx,my,.5).unproject(cam).sub(cam.position).normalize();const t=(grp.position.z-cam.position.z)/rc.z;tg=grp.worldToLocal(cam.position.clone().add(rc.clone().multiplyScalar(t)));if(tg.length()<RAD*1.15)tg=null}
+const B=Array.from({length:16},()=>({t:0,o:null}));
+
+function tick(ms){
+ const t=ms/1000,dt=Math.min(.05,t-last||.016);last=t;
+ surge*=Math.pow(.3,dt);mact=Math.max(0,mact-dt/3);
+ const k=Math.min(1,dt*3),asp=W/H,wide=asp>1.1;
+ core.material.uniforms.t.value=t;core.material.uniforms.s.value=surge;
+ core.rotation.y+=dt*(.4+surge*3);core.rotation.x=Math.sin(t*.25)*.3;
+ wire.rotation.y-=dt*.25;wire.rotation.x+=dt*.12;
+ rings[0].rotation.x+=dt*.6;rings[1].rotation.y+=dt*.45;stars.rotation.y=t*.012;
+ grp.scale.setScalar(Math.min(1,asp*.95)*(1-sy*.12)*(1+surge*.06));
+ grp.position.x+=((wide?6.55*asp*.26*Math.cos(sy*9.42):0)-grp.position.x)*k;
+ grp.position.y+=((wide?0:1.5-sy)-grp.position.y)*k;
+ grp.rotation.y+=(mx*.5-grp.rotation.y)*k;grp.rotation.x+=(-my*.3-grp.rotation.x)*k;
+ ren.render(scene,cam);aim();
+ g.clearRect(0,0,W,H);g.globalCompositeOperation='lighter';g.lineJoin=g.lineCap='round';
+ const c=new V().setFromMatrixPosition(grp.matrixWorld).project(cam),cx=(c.x+1)/2*W,cy=(1-c.y)/2*H,rp=RAD*grp.scale.x*H/6.55,gg=g.createRadialGradient(cx,cy,rp*.6,cx,cy,rp*3.4);
+ gg.addColorStop(0,`rgba(122,92,255,${.26+surge*.3})`);gg.addColorStop(.35,`rgba(255,43,214,${.09+surge*.12})`);gg.addColorStop(1,'rgba(122,92,255,0)');
+ g.fillStyle=gg;g.fillRect(0,0,W,H);
+ const n=4+Math.round(surge*11)+(mact>0?2:0);
+ B.forEach((b,i)=>{b.t-=dt;if(b.t<=0||!b.o){b.o=mk();b.t=rnd(.04,.17)}if(i<n)bolt(b.o,rnd(.55,1))});
+ requestAnimationFrame(tick)}
+requestAnimationFrame(tick);
+})();
+</script>
+</body></html>
